@@ -1,47 +1,114 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="utf-8">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SAMCO Flipbook</title>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="https://cdn.jsdelivr.net/gh/blasten/turn.js/turn.min.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
   <style>
+    /* Custom CSS to handle the flipbook's container and page images */
     body {
+      font-family: 'Inter', sans-serif;
+    }
+    .flipbook-container {
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 100vh;
-      margin: 0;
-      background: #f5f5f5;
+    }
+    .flipbook-page {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
     }
     #flipbook {
       width: 900px;
       height: 600px;
     }
-    #flipbook img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
+    
+    .turn-page {
+      background-color: #f3f4f6;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
     }
   </style>
 </head>
-<body>
-  <div id="flipbook">
-    <div><img src="pages/page_1.jpg" alt="page_1.jpg"></div>
-    <div><img src="pages/page_2.jpg" alt="page_2.jpg"></div>
-    <div><img src="pages/page_3.jpg" alt="page_3.jpg"></div>
-    <div><img src="pages/page_4.jpg" alt="page_4.jpg"></div>
-    <div><img src="pages/page_5.jpg" alt="page_5.jpg"></div>
-    <div><img src="pages/page_6.jpg" alt="page_6.jpg"></div>
-    <div><img src="pages/page_7.jpg" alt="page_7.jpg"></div>
-    <div><img src="pages/page_8.jpg" alt="page_8.jpg"></div>
+<body class="bg-gray-100 flex flex-col justify-center items-center min-h-screen p-4">
+
+  <h1 class="text-4xl font-extrabold text-gray-800 mb-8 tracking-tight">SAMCO Flipbook</h1>
+  
+  <div class="flex items-center space-x-4">
+    <button id="prev-btn" class="bg-blue-500 text-white p-4 rounded-full shadow-lg hover:bg-blue-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <title>Previous Page</title>
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+      </svg>
+    </button>
+
+    <div id="flipbook" class="bg-white rounded-lg shadow-xl">
+      <!-- Pages are now loaded from the 'pages' folder -->
+      <div class="turn-page">
+        <img src="pages/page_1.jpg" alt="page 1" class="flipbook-page rounded-lg">
+      </div>
+      <div class="turn-page">
+        <img src="pages/page_2.jpg" alt="page 2" class="flipbook-page rounded-lg">
+      </div>
+      <div class="turn-page">
+        <img src="pages/page_3.jpg" alt="page 3" class="flipbook-page rounded-lg">
+      </div>
+      <div class="turn-page">
+        <img src="pages/page_4.jpg" alt="page 4" class="flipbook-page rounded-lg">
+      </div>
+      <div class="turn-page">
+        <img src="pages/page_5.jpg" alt="page 5" class="flipbook-page rounded-lg">
+      </div>
+      <div class="turn-page">
+        <img src="pages/page_6.jpg" alt="page 6" class="flipbook-page rounded-lg">
+      </div>
+      <div class="turn-page">
+        <img src="pages/page_7.jpg" alt="page 7" class="flipbook-page rounded-lg">
+      </div>
+      <div class="turn-page">
+        <img src="pages/page_8.jpg" alt="page 8" class="flipbook-page rounded-lg">
+      </div>
+    </div>
+
+    <button id="next-btn" class="bg-blue-500 text-white p-4 rounded-full shadow-lg hover:bg-blue-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <title>Next Page</title>
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+      </svg>
+    </button>
   </div>
 
   <script>
-    $("#flipbook").turn({
-      width: 900,
-      height: 600,
-      autoCenter: true
+    $(document).ready(function() {
+      // Initialize the turn.js flipbook
+      $("#flipbook").turn({
+        width: 900,
+        height: 600,
+        autoCenter: true
+      });
+
+      // Handle the "Previous" button click
+      $("#prev-btn").on("click", function() {
+        $("#flipbook").turn("previous");
+      });
+
+      // Handle the "Next" button click
+      $("#next-btn").on("click", function() {
+        $("#flipbook").turn("next");
+      });
+      
+      // Update button states based on the current page
+      $("#flipbook").bind("turning", function(event, page, view) {
+        $("#prev-btn").prop("disabled", page <= 1);
+        $("#next-btn").prop("disabled", page >= $(this).turn("pages"));
+      });
+
+      // Initial state check
+      $("#prev-btn").prop("disabled", true);
     });
   </script>
 </body>
